@@ -3,32 +3,24 @@ const emoji = require('../Utils/emoji.json');
 const config = require('../config.json');
 
 module.exports = async (client, message) => {
-    if (message.author.bot || !message.guild || message.webhookID) return;
+    
+    if (message.author.bot || !message.guild || message.webhookID || message.channel.type === 'dm') return;
 
-    if (message.content === `<@${client.user.id}>`){
-
-    const embed = new Discord.MessageEmbed()
-    .setTitle('Did you ping me ??')
-    .setThumbnail(client.user.displayAvatarURL({dynamic: true, size: 1024}))
-    .setDescription(`Aight I'm ${client.user.username} I'm a multi purpose bot my prefix is \`!!\` try \`!!help\` to get to know me more\n\n[Add Me](${config.Invite}) | [Join Server](${config.Server})`)
-    .setTimestamp()
-
-     message.channel.send(embed)
-    }
-    if (message.content === `<@!${client.user.id}>`){
+    if (message.content === `<@${client.user.id}>` || message.content === `<@!${client.user.id}>`) {
 
     const embed = new Discord.MessageEmbed()
     .setTitle('Did you ping me ??')
     .setThumbnail(client.user.displayAvatarURL({dynamic: true, size: 1024}))
-    .setDescription(`Aight I'm ${client.user.username} I'm a multi purpose bot my prefix is \`!!\` try \`!!help\` to get to know me more\n\n[Add Me](${config.Invite}) | [Join Server](${config.Server})`)
+    .setDescription(`Aight I'm ${client.user.username} I'm a multi purpose bot my prefix is \`${config.Prefix}\` try \`${config.Prefix}help\` to get the list of all my commands.\n\n[Add Me](${config.Invite}) | [Join Server](${config.Server})`)
     .setTimestamp()
-
+    
     message.channel.send(embed)
+    
     }
 
     const prefix = config.Prefix;
   
-    if (!message.content.startsWith(prefix)) return;
+    if (!message.content.toLowerCase().startsWith(prefix)) return;
 
     if (!message.member) message.member = await message.guild.fetchMember(message);
 
@@ -44,4 +36,5 @@ module.exports = async (client, message) => {
     if (command) 
     
     command.run(client, message, args);
+
 }
